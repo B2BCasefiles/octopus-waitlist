@@ -2,7 +2,7 @@ import { Navbar } from "@/components/navbar"
 import { Hero } from "@/components/hero"
 import { VideoShowcase } from "@/components/video-showcase"
 import { ComparisonTable } from "@/components/comparison-table"
-import { Footer } from "@/components/footer"
+// import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (
@@ -11,7 +11,7 @@ export default function Home() {
       <Hero />
       <VideoShowcase />
       <ComparisonTable />
-      <Footer />
+      {/* <Footer /> */}
     </main>
   )
 }

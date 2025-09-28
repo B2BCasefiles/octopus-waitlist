@@ -1,56 +1,46 @@
 import { Check, X } from "lucide-react"
 
-const features = [
+const platforms = [
   {
-    feature: "AI-Powered Clip Generation",
+    feature: "Aesthetic Stylish Captions",
     octopus: true,
     opus: true,
   },
   {
-    feature: "Custom Branding",
+    feature: "Brand Fonts Custom Text",
     octopus: true,
     opus: false,
   },
   {
-    feature: "Batch Processing",
+    feature: "Custom Color Grading LUT",
+    octopus: true,
+    opus: "Limited",
+  },
+  {
+    feature: "Batch Export",
     octopus: true,
     opus: true,
   },
   {
-    feature: "Advanced Analytics",
-    octopus: true,
+    feature: "High Quality Export",
+    octopus: "1080p/4K+",
+    opus: "Up to 1080p",
+  },
+  {
+    feature: "Fast Processing",
+    octopus: "Edge-optimized, very fast",
+    opus: "Fast, cloud-based",
+  },
+  {
+    feature: "Watermark Free Plan",
+    octopus: false,
     opus: false,
   },
   {
-    feature: "Multi-Language Support",
-    octopus: true,
-    opus: false,
-  },
-  {
-    feature: "API Access",
-    octopus: true,
-    opus: false,
-  },
-  {
-    feature: "White-Label Solution",
-    octopus: true,
-    opus: false,
-  },
-  {
-    feature: "24/7 Support",
-    octopus: true,
-    opus: false,
-  },
-  {
-    feature: "Unlimited Exports",
-    octopus: true,
-    opus: false,
-  },
-  {
-    feature: "Team Collaboration",
-    octopus: true,
-    opus: true,
-  },
+    feature: "Effective Pricing",
+    octopus: "$10 one-time, 1500 credits",
+    opus: "$15/mo (150 credits)",
+  }
 ]
 
 export function ComparisonTable() {
@@ -72,11 +62,11 @@ export function ComparisonTable() {
               <h3 className="text-lg font-semibold text-white text-center">OctopusClips</h3>
             </div>
             <div className="p-6 border-b border-l border-white/10">
-              <h3 className="text-lg font-semibold text-white text-center">Opus Clips</h3>
+              <h3 className="text-lg font-semibold text-white text-center">Opus Clip</h3>
             </div>
 
             {/* Feature Rows */}
-            {features.map((item, index) => (
+            {platforms.map((item, index) => (
               <>
                 <div key={`feature-${index}`} className="p-4 border-b border-white/5">
                   <span className="text-white/90">{item.feature}</span>
@@ -85,17 +75,25 @@ export function ComparisonTable() {
                   key={`octopus-${index}`}
                   className="p-4 border-b border-l border-white/5 bg-pink-500/5 text-center"
                 >
-                  {item.octopus ? (
-                    <Check className="w-5 h-5 text-green-400 mx-auto" />
+                  {typeof item.octopus === 'boolean' ? (
+                    item.octopus ? (
+                      <Check className="w-5 h-5 text-green-400 mx-auto" />
+                    ) : (
+                      <X className="w-5 h-5 text-red-400 mx-auto" />
+                    )
                   ) : (
-                    <X className="w-5 h-5 text-red-400 mx-auto" />
+                    <span className="text-white/90">{item.octopus}</span>
                   )}
                 </div>
                 <div key={`opus-${index}`} className="p-4 border-b border-l border-white/5 text-center">
-                  {item.opus ? (
-                    <Check className="w-5 h-5 text-green-400 mx-auto" />
+                  {typeof item.opus === 'boolean' ? (
+                    item.opus ? (
+                      <Check className="w-5 h-5 text-green-400 mx-auto" />
+                    ) : (
+                      <X className="w-5 h-5 text-red-400 mx-auto" />
+                    )
                   ) : (
-                    <X className="w-5 h-5 text-red-400 mx-auto" />
+                    <span className="text-white/90">{item.opus}</span>
                   )}
                 </div>
               </>

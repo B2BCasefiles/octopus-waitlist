@@ -14,12 +14,12 @@ export function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-purple-900" />
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 className="text-5xl sm:text-6xl lg:text-8xl font-bold text-white mb-4 tracking-wider">OCTOPUS CLIPS</h1>
+        <h4 className="text-4xl   font-bold text-white mb-4 tracking-wider">Stop Paying $29/Month <br/> For Amateur-Looking Clips</h4>
 
         <p className="text-sm sm:text-base lg:text-lg text-gray-300 mb-12 tracking-widest uppercase font-medium">
-          JOIN THE WAITLIST FOR CREATING
+        Reserve Your Spot for Pro-Quality, 
           <br />
-          SEAMLESS TYPOGRAPHY IN MINUTES
+          Cinematic Captions in Minutes with an effective price.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-6">
@@ -44,17 +44,7 @@ export function Hero() {
           </button>
         </div>
 
-        <div className="flex items-center justify-center gap-3 text-sm text-gray-400">
-          <div className="flex -space-x-2">
-            {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 border-2 border-gray-800"
-              />
-            ))}
-          </div>
-          <span className="text-xs">Already joined 2k</span>
-        </div>
+        
       </div>
     </section>
   )

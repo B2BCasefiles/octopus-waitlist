@@ -48,7 +48,13 @@ export function VideoShowcase() {
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.load()
-      setIsPlaying(false)
+      // Auto play the video when switched
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.play()
+          setIsPlaying(true)
+        }
+      }, 100) // Small delay to ensure video is loaded
     }
   }, [currentVideo])
 
@@ -61,12 +67,21 @@ export function VideoShowcase() {
         </div>
 
         <div className="relative max-w-4xl mx-auto">
+          {/* Muted indicator */}
+          <div className="mb-4 text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-900/50 rounded-full border border-purple-700">
+              <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+              <span className="text-sm text-purple-200">This video's audio is muted for the showcase</span>
+            </div>
+          </div>
+          
           {/* Video Container */}
           <div className="relative aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl">
             <video
               ref={videoRef}
               className="w-full h-full object-cover"
               preload="metadata"
+              muted
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
               onEnded={() => setIsPlaying(false)}
