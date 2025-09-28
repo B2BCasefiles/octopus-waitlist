@@ -74,10 +74,8 @@ export function Pricing() {
             
             if (result.success) {
               toast.success('Payment successful! You now have access to Founder plan.')
-              // Redirect to dashboard
-              setTimeout(() => {
-                window.location.href = '/dashboard';
-              }, 2000);
+              // Redirect to dashboard immediately
+              window.location.href = '/dashboard';
             } else {
               toast.error('Payment verification failed. Please contact support.');
             }
@@ -105,146 +103,132 @@ export function Pricing() {
   }
 
   return (
-    <section id="pricing" className="py-24 relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-gray-900/40 to-black/60" />
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="pricing" className="py-20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-background to-card"></div>
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-5xl font-display font-bold text-white mb-4 text-balance tracking-wide">
-            Choose Your Access Level
+          <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground mb-4">
+            Simple, Transparent Pricing
           </h2>
-          <p className="text-xl text-muted-foreground text-pretty tracking-wide">
-                Investment in your content future, not another subscription
-              </p>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Choose the plan that works best for you. No hidden fees, no surprises.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Free Waitlist */}
-          <Card className="glass border-white/10 backdrop-blur-sm hover:border-white/20 transition-all duration-300">
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-display font-bold text-white">Free Waitlist</CardTitle>
-              <div className="text-4xl font-display font-bold text-white">$0</div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-brand-blue" />
-                  <span className="text-muted-foreground">Get notified first</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-brand-blue" />
-                  <span className="text-muted-foreground">Launch updates</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-brand-blue" />
-                  <span className="text-muted-foreground">Community access</span>
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Free Waitlist Card */}
+          <div className="bg-card border border-border rounded-2xl p-6 transition-all duration-300 hover:border-primary/50">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-foreground mb-2">Free Waitlist</h3>
+              <div className="text-3xl font-bold text-primary">Free</div>
+              <p className="text-muted-foreground mt-2">Join the community</p>
+            </div>
+            
+            <ul className="space-y-3 mb-6">
+              <li className="flex items-center">
+                <Check className="w-5 h-5 text-primary mr-2" />
+                <span className="text-muted-foreground">Early access notifications</span>
+              </li>
+              <li className="flex items-center">
+                <Check className="w-5 h-5 text-primary mr-2" />
+                <span className="text-muted-foreground">Community updates</span>
+              </li>
+              <li className="flex items-center">
+                <Check className="w-5 h-5 text-primary mr-2" />
+                <span className="text-muted-foreground">Feature previews</span>
+              </li>
+            </ul>
+            
+            {!user ? (
+              <button
+                onClick={() => router.push('/signin')}
+                className="w-full py-3 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors border border-border"
+              >
+                Join Waitlist
+              </button>
+            ) : userProfile?.beta_access ? (
+              <div className="text-center py-3 text-sm text-green-500 font-medium">
+                ✓ Already have access
               </div>
-              {!user ? (
-                <button 
-                  onClick={() => router.push('/signin')}
-                  className="w-full py-3 px-6 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-500 hover:to-blue-500 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                >
-                  Sign In to Join
-                </button>
-              ) : userProfile?.beta_access ? (
-                <div className="text-center">
-                  <p className="text-sm text-green-600 font-medium">✓ Already have access</p>
-                </div>
-              ) : userProfile?.waitlist_status === 'pending' ? (
-                <div className="text-center">
-                  <p className="text-sm text-yellow-600 font-medium">✓ Already on waitlist</p>
-                </div>
-              ) : (
-                <WaitlistForm plan="free" />
-              )}
-            </CardContent>
-          </Card>
+            ) : userProfile?.waitlist_status === 'pending' ? (
+              <div className="text-center py-3 text-sm text-yellow-500 font-medium">
+                ✓ Already on waitlist
+              </div>
+            ) : (
+              <WaitlistForm plan="free" />
+            )}
+          </div>
 
-          {/* Founder Access */}
-          <Card className="glass border-white/10 backdrop-blur-sm hover:border-white/20 transition-all duration-300 relative overflow-hidden">
-            <div className="absolute top-4 right-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-3 py-1 rounded-full text-sm font-medium">
-                33% OFF
+          {/* Founder Access Card */}
+          <div className="bg-card border border-border rounded-2xl p-6 transition-all duration-300 hover:border-primary/50 relative">
+            <div className="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-medium">
+              Limited Offer
+            </div>
+            
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-foreground mb-2">Founder Access</h3>
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-3xl font-bold text-primary">$10</span>
+                <span className="text-muted-foreground line-through">$15</span>
               </div>
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl font-display font-bold text-white">
-                  Founder Access – Limited
-                </CardTitle>
-                <div className="flex items-center justify-center gap-2">
-                  <span className="text-4xl font-display font-bold text-white">$67</span>
-                  <span className="text-lg text-gray-400 line-through">$100</span>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <ul className="space-y-2 text-gray-300">
-                  <li className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-brand-gold" />
-                    <span className="text-foreground">Immediate beta access</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-brand-gold" />
-                    <span className="text-foreground">1,500 clip credits</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-brand-gold" />
-                    <span className="text-foreground">Custom font upload</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-brand-gold" />
-                    <span className="text-foreground">Professional color grading</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-brand-gold" />
-                    <span className="text-foreground">Multi-platform export</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-brand-gold" />
-                    <span className="text-foreground">Priority support</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-brand-gold" />
-                    <span className="text-foreground">Lifetime 20% discount</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-brand-gold" />
-                    <span className="text-foreground">VIP creator community</span>
-                  </li>
-              </ul>
-              {user ? (
-                userProfile?.beta_access ? (
-                  <button className="w-full py-3 px-6 bg-gradient-to-r from-yellow-400 to-orange-500 text-black rounded-lg font-medium transition-all duration-300 opacity-60 cursor-not-allowed">
-                    Already Have Access
-                  </button>
-                ) : (
-                  <button 
-                    className="w-full py-3 px-6 bg-gradient-to-r from-yellow-400 to-orange-500 text-black rounded-lg font-medium hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                    onClick={handleFounderPayment}
-                    disabled={loading}
-                  >
-                    {loading ? 'Processing...' : 'Get Founder Access'}
-                  </button>
-                )
-              ) : (
-                <button 
-                  className="w-full py-3 px-6 bg-gradient-to-r from-yellow-400 to-orange-500 text-black rounded-lg font-medium hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                  onClick={() => router.push('/signin')}
-                >
-                  Sign In to Purchase
+              <p className="text-muted-foreground mt-2">One-time payment</p>
+            </div>
+            
+            <ul className="space-y-3 mb-6">
+              <li className="flex items-center">
+                <Check className="w-5 h-5 text-primary mr-2" />
+                <span className="text-muted-foreground">Full platform access</span>
+              </li>
+              <li className="flex items-center">
+                <Check className="w-5 h-5 text-primary mr-2" />
+                <span className="text-muted-foreground">5,000 clip credits</span>
+              </li>
+              <li className="flex items-center">
+                <Check className="w-5 h-5 text-primary mr-2" />
+                <span className="text-muted-foreground">Priority support</span>
+              </li>
+              <li className="flex items-center">
+                <Check className="w-5 h-5 text-primary mr-2" />
+                <span className="text-muted-foreground">Exclusive features</span>
+              </li>
+            </ul>
+            
+            {user ? (
+              userProfile?.beta_access ? (
+                <button className="w-full py-3 bg-secondary text-muted-foreground rounded-lg font-medium cursor-not-allowed">
+                  Already Purchased
                 </button>
-              )}
-              {!user && (
-                <p className="text-xs text-center text-muted-foreground">Sign in to purchase Founder Access</p>
-              )}
-              {userProfile?.beta_access && (
-                <p className="text-xs text-center text-green-600 font-medium">✓ You have Founder Access!</p>
-              )}
-              {!userProfile?.beta_access && (
-                <>
-                  <p className="text-xs text-center text-muted-foreground">Only 150 founder spots remaining</p>
-                  <p className="text-xs text-center text-muted-foreground">7‑day money‑back, no questions asked</p>
-                </>
-              )}
-            </CardContent>
-          </Card>
+              ) : (
+                <button
+                  className="w-full py-3 bg-primary/20 text-primary-foreground rounded-lg font-medium cursor-not-allowed"
+                  disabled
+                >
+                  Coming Soon
+                </button>
+              )
+            ) : (
+              <button
+                className="w-full py-3 bg-primary/20 text-primary-foreground rounded-lg font-medium cursor-not-allowed"
+                disabled
+              >
+                Coming Soon
+              </button>
+            )}
+            
+            {!user && (
+              <p className="text-xs text-center text-muted-foreground mt-3">Sign in to purchase access</p>
+            )}
+            
+            {userProfile?.beta_access && (
+              <p className="text-xs text-center text-green-500 font-medium mt-3">✓ You have access!</p>
+            )}
+          </div>
+        </div>
+        
+        <div className="text-center mt-12">
+          <p className="text-muted-foreground text-sm">
+            Have questions? <a href="/contact" className="text-primary hover:underline">Contact us</a>
+          </p>
         </div>
       </div>
     </section>

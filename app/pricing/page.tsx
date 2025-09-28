@@ -1,5 +1,9 @@
 import { Pricing } from "@/components/pricing"
 
 export default function PricingPage() {
-  return <Pricing />
+  return (
+    <div className="min-h-screen bg-background">
+      <Pricing />
+    </div>
+  )
 }

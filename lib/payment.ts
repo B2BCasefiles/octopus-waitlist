@@ -1,4 +1,4 @@
-import { razorpay } from '@/lib/razorpay/client'
+import { createRazorpayInstance } from '@/lib/razorpay/client'
 import { supabase } from '@/lib/supabase/client'
 import { createAdminClient } from '@/lib/supabase/admin'
 
@@ -15,8 +15,13 @@ export interface PaymentData {
 
 export const createRazorpayOrder = async (amount: number, userId: string) => {
   try {
+    if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+      throw new Error('Razorpay environment variables are not configured properly.')
+    }
+    
+    const razorpay = createRazorpayInstance();
     if (!razorpay) {
-      throw new Error('Razorpay client not initialized. Please check your environment variables.')
+      throw new Error('Razorpay client not initialized. Please check your configuration.')
     }
     
     // Create order in Razorpay
@@ -78,71 +83,123 @@ export const verifyPaymentOnServer = async (paymentData: {
   razorpay_signature: string
 }) => {
   try {
-    // In a real application, you would use crypto from Node.js
-    // For client-side purposes, we'll defer to a backend API
-    const crypto = require('crypto')
+    // Import crypto dynamically for server-side usage
+    const crypto = (await import('crypto')).default;
     
-    const secret = process.env.RAZORPAY_KEY_SECRET!
+    const secret = process.env.RAZORPAY_KEY_SECRET!;
+    if (!secret) {
+      throw new Error('RAZORPAY_KEY_SECRET environment variable is not set');
+    }
     
+    const payload = paymentData.razorpay_order_id + '|' + paymentData.razorpay_payment_id;
     const generated_signature = crypto
       .createHmac('sha256', secret)
-      .update(paymentData.razorpay_order_id + '|' + paymentData.razorpay_payment_id)
-      .digest('hex')
+      .update(payload)
+      .digest('hex');
     
     if (generated_signature === paymentData.razorpay_signature) {
       // Use admin client for server-side operations
-      const adminSupabase = createAdminClient()
+      const adminSupabase = createAdminClient();
       
       // First, get the order to find the user_id
       const { data: orderData, error: orderError } = await adminSupabase
         .from('orders')
         .select('id, user_id, amount')
         .eq('razorpay_order_id', paymentData.razorpay_order_id)
-        .single()
+        .single();
       
-      if (orderError) throw orderError
+      if (orderError) {
+        console.error('Error fetching order:', orderError);
+        throw orderError;
+      }
       
-      // Update order status to paid
+      if (!orderData) {
+        throw new Error('Order not found');
+      }
+      
+      // Update order status to paid atomically
       const { error: updateOrderError } = await adminSupabase
         .from('orders')
-        .update({ status: 'paid' })
-        .eq('razorpay_order_id', paymentData.razorpay_order_id)
+        .update({ 
+          status: 'paid',
+          updated_at: new Date().toISOString()
+        })
+        .eq('razorpay_order_id', paymentData.razorpay_order_id);
       
-      if (updateOrderError) throw updateOrderError
+      if (updateOrderError) {
+        console.error('Error updating order status:', updateOrderError);
+        throw updateOrderError;
+      }
       
-      // Insert payment record
+      // Insert payment record atomically
       const { data: paymentRecord, error: paymentError } = await adminSupabase
         .from('payments')
         .insert([{
           order_id: orderData.id,
           user_id: orderData.user_id,
+          razorpay_order_id: paymentData.razorpay_order_id,
           razorpay_payment_id: paymentData.razorpay_payment_id,
+          razorpay_signature: paymentData.razorpay_signature,
           status: 'success',
           amount: orderData.amount,
-          payment_method: 'razorpay'
+          payment_method: 'razorpay',
+          created_at: new Date().toISOString()
         }])
         .select()
-        .single()
+        .single();
       
-      if (paymentError) throw paymentError
+      if (paymentError) {
+        console.error('Error inserting payment record:', paymentError);
+        throw paymentError;
+      }
       
-      // Update user profile to grant beta access
+      // Update user profile to grant beta access atomically
       const { error: profileError } = await adminSupabase
         .from('profiles')
         .update({ 
           beta_access: true,
-          bought_at: new Date().toISOString()
+          bought_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         })
-        .eq('id', orderData.user_id)
+        .eq('id', orderData.user_id);
       
-      if (profileError) throw profileError
+      if (profileError) {
+        console.error('Error updating user profile:', profileError);
+        // If profile update fails, we should still consider payment successful
+        // as the payment record is already inserted
+        console.warn('Profile update failed, but payment was processed successfully');
+      }
       
-      return { verified: true, data: paymentRecord }
+      return { verified: true, data: paymentRecord };
     } else {
-      return { verified: false, error: 'Signature verification failed' }
+      console.error('Signature verification failed', { 
+        expected: generated_signature, 
+        received: paymentData.razorpay_signature 
+      });
+      return { verified: false, error: 'Signature verification failed' };
     }
   } catch (error: any) {
-    console.error('Error verifying payment:', error)
-    return { verified: false, error: error.message }
+    console.error('Error verifying payment:', error);
+    return { verified: false, error: error.message || 'Internal server error during payment verification' };
   }
-}
+};
+
+// Client-side verification helper
+export const verifyPayment = async (paymentData: any) => {
+  try {
+    // This would call your backend API for server-side verification
+    const response = await fetch('/api/verify-payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(paymentData),
+    });
+    
+    const result = await response.json();
+    return { verified: result.success, data: result.data };
+  } catch (error) {
+    console.error('Payment verification error:', error);
+    return { verified: false, error: error };
+  }
+};

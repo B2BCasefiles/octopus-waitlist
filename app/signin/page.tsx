@@ -31,15 +31,17 @@ export default function SignInPage() {
     
     try {
       if (isSignUp) {
-        const { error } = await signUp(email, password)
+        const { error, requiresConfirmation } = await signUp(email, password)
         if (error) {
           toast.error(`Sign up failed: ${error}`)
         } else {
-          toast.success('Check your email to confirm your account!')
-          // After sign up, redirect to pricing to choose plan
-          setTimeout(() => {
-            router.push('/pricing')
-          }, 2000)
+          if (requiresConfirmation) {
+            toast.success('Please check your email to confirm your account!')
+          } else {
+            toast.success('Account created successfully!')
+          }
+          // After sign up, redirect to pricing immediately
+          router.push('/pricing')
         }
       } else {
         const { error } = await signIn(email, password)
@@ -60,22 +62,20 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen relative p-4">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-gray-900/60 to-black/80" />
-      <div className="absolute inset-0 bg-black/40" />
-      <Card className="w-full max-w-md glass border-white/10 backdrop-blur-lg relative z-10">
-        <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-3xl font-display font-bold text-white mb-2">
+    <div className="flex items-center justify-center min-h-screen bg-background p-4">
+      <div className="w-full max-w-md bg-card border border-border rounded-2xl p-8">
+        <CardHeader className="space-y-1 text-center p-0 mb-6">
+          <CardTitle className="text-3xl font-display font-bold text-foreground mb-2">
             {isSignUp ? 'Create Account' : 'Sign In'}
           </CardTitle>
-          <CardDescription className="text-gray-300 text-lg">
+          <CardDescription className="text-muted-foreground text-lg">
             {isSignUp ? 'Enter your details to create an account' : 'Enter your credentials to access your account'}
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 p-0">
             <div className="space-y-3">
-              <Label htmlFor="email" className="text-gray-300 font-medium">Email</Label>
+              <Label htmlFor="email" className="text-muted-foreground font-medium">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -84,11 +84,11 @@ export default function SignInPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={isLoading}
-                className="bg-white/5 border-white/20 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-secondary border-border text-foreground placeholder:text-muted-foreground focus:ring-primary focus:border-primary"
               />
             </div>
             <div className="space-y-3">
-              <Label htmlFor="password" className="text-gray-300 font-medium">Password</Label>
+              <Label htmlFor="password" className="text-muted-foreground font-medium">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -97,13 +97,13 @@ export default function SignInPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={isLoading}
-                className="bg-white/5 border-white/20 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-secondary border-border text-foreground placeholder:text-muted-foreground focus:ring-primary focus:border-primary"
               />
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
+          <CardFooter className="flex flex-col space-y-4 p-0 pt-4">
             <button 
-              className="w-full py-3 px-6 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-500 hover:to-blue-500 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full py-3 px-6 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               type="submit"
               disabled={isLoading}
             >
@@ -116,12 +116,12 @@ export default function SignInPage() {
                 isSignUp ? 'Sign Up' : 'Sign In'
               )}
             </button>
-            <div className="text-center text-sm text-gray-300">
+            <div className="text-center text-sm text-muted-foreground">
               {isSignUp ? (
                 <>
                   Already have an account?{' '}
                   <button 
-                    className="text-purple-400 hover:text-purple-300 underline transition-colors duration-200 disabled:opacity-50"
+                    className="text-primary hover:text-primary/80 underline transition-colors duration-200 disabled:opacity-50"
                     onClick={() => setIsSignUp(false)}
                     disabled={isLoading}
                   >
@@ -132,7 +132,7 @@ export default function SignInPage() {
                 <>
                   Don't have an account?{' '}
                   <button 
-                    className="text-purple-400 hover:text-purple-300 underline transition-colors duration-200 disabled:opacity-50"
+                    className="text-primary hover:text-primary/80 underline transition-colors duration-200 disabled:opacity-50"
                     onClick={() => setIsSignUp(true)}
                     disabled={isLoading}
                   >
@@ -142,13 +142,13 @@ export default function SignInPage() {
               )}
             </div>
             <div className="text-center text-sm">
-              <Link href="/" className="text-gray-400 hover:text-white transition-colors duration-200">
+              <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors duration-200">
                 Back to Home
               </Link>
             </div>
           </CardFooter>
         </form>
-      </Card>
+      </div>
     </div>
   )
 }

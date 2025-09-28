@@ -32,11 +32,11 @@ export default function AuthCallbackPage() {
           }
 
           if (data.user) {
-            // Check if user came from waitlist
+            // Batch waitlist operations if needed
             const waitlistEmail = sessionStorage.getItem('waitlist_email')
             if (waitlistEmail) {
-              // Add user to waitlist
-              const response = await fetch('/api/waitlist', {
+              // Add user to waitlist (run in background, don't block redirect)
+              fetch('/api/waitlist', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -46,13 +46,18 @@ export default function AuthCallbackPage() {
                   email: waitlistEmail,
                 }),
               })
-
-              if (response.ok) {
-                sessionStorage.removeItem('waitlist_email')
-              }
+              .then(response => {
+                if (response.ok) {
+                  sessionStorage.removeItem('waitlist_email')
+                }
+              })
+              .catch(err => {
+                console.error('Waitlist API error:', err)
+                // Don't block redirect if waitlist fails
+              })
             }
 
-            // Redirect to pricing page after successful auth
+            // Redirect to pricing page immediately after successful auth
             router.push('/pricing')
           }
         } else {
@@ -72,9 +77,9 @@ export default function AuthCallbackPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background p-4">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md bg-card border-border">
           <CardHeader className="text-center">
-            <CardTitle>Completing Authentication...</CardTitle>
+            <CardTitle className="text-foreground">Completing Authentication...</CardTitle>
           </CardHeader>
           <CardContent className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
@@ -88,13 +93,16 @@ export default function AuthCallbackPage() {
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background p-4">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md bg-card border-border">
           <CardHeader className="text-center">
-            <CardTitle>Authentication Failed</CardTitle>
+            <CardTitle className="text-foreground">Authentication Failed</CardTitle>
           </CardHeader>
           <CardContent className="text-center space-y-4">
             <p className="text-destructive">{error}</p>
-            <Button onClick={() => router.push('/signin')}>
+            <Button 
+              className="bg-primary hover:bg-primary/90"
+              onClick={() => router.push('/signin')}
+            >
               Try Again
             </Button>
           </CardContent>

@@ -30,8 +30,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable} antialiased`}>
-      <body className="bg-background text-foreground font-sans">
+    <html lang="en" className={`${inter.variable} ${poppins.variable} antialiased dark`}>
+      <body className="bg-background text-foreground font-sans min-h-screen">
         {children}
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
