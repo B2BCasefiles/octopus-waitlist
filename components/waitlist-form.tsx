@@ -22,13 +22,10 @@ export function WaitlistForm({ variant = 'default' }: WaitlistFormProps) {
 
     try {
       if (!user) {
-        // If user is not signed in, sign them up first
-        const { error } = await signUp(email, 'tempPassword123!')
-        if (error) {
-          toast.error('Failed to create account: ' + error)
-          return
-        }
-        toast.success('Account created! Check your email to confirm and complete waitlist signup.')
+        // If user is not signed in, redirect them to the sign up page
+        // Store the email in session storage so it can be used after verification
+        sessionStorage.setItem('waitlist_email', email)
+        window.location.href = '/signup'
       } else {
         // If user is signed in, add them to waitlist
         const result = await addToWaitlist(user.id)

@@ -49,8 +49,8 @@ export function Footer() {
             <h3 className="font-semibold text-foreground mb-4">Resources</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <Link href="/signin" className="hover:text-foreground transition-colors block">
-                  Sign In
+                <Link href="/signup" className="hover:text-foreground transition-colors block">
+                  Sign Up
                 </Link>
               </li>
               <li>

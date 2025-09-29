@@ -25,6 +25,16 @@ export function Pricing() {
 
   const fetchUserProfile = async () => {
     try {
+      // Check if user's email is confirmed first
+      if (user && !user.email_confirmed_at) {
+        toast.error('Please confirm your email address before accessing the pricing page.')
+        // Optionally redirect to a page that explains the email confirmation
+        setTimeout(() => {
+          router.push('/signin')
+        }, 3000)
+        return
+      }
+
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -41,8 +51,8 @@ export function Pricing() {
 
   const handleFounderPayment = async () => {
     if (!user) {
-      toast.error('Please sign in to purchase Founder Access')
-      window.location.href = '/signin'
+      toast.error('Please sign up to purchase Founder Access')
+      window.location.href = '/signup'
       return
     }
     
@@ -142,7 +152,7 @@ export function Pricing() {
               
               {!user ? (
                 <Button
-                  onClick={() => router.push('/signin')}
+                  onClick={() => router.push('/signup')}
                   className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-lg py-6 rounded-xl font-bold uppercase transition-all duration-300"
                 >
                   Join Waitlist

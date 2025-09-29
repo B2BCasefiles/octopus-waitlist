@@ -47,13 +47,13 @@ export default function DashboardPage() {
         <div className="max-w-md w-full space-y-6 text-center">
           <h1 className="text-2xl font-bold text-foreground">Access Denied</h1>
           <p className="text-muted-foreground">
-            Please sign in to access your dashboard.
+            Please sign up to access your dashboard.
           </p>
           <Button 
             className="bg-primary hover:bg-primary/90"
-            onClick={() => window.location.href = '/signin'}
+            onClick={() => window.location.href = '/signup'}
           >
-            Sign In
+            Sign Up
           </Button>
         </div>
       </div>

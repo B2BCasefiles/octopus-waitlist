@@ -12,11 +12,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Add user to waitlist
+    // Update user's waitlist status in profiles table
     const { data, error } = await supabase
       .from('profiles')
       .update({
         waitlist_status: 'pending',
+        email: email,
         updated_at: new Date().toISOString()
       })
       .eq('id', userId)

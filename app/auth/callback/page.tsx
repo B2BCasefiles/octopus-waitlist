@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase/client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 export default function AuthCallbackPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
+ 
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
@@ -23,7 +24,7 @@ export default function AuthCallbackPage() {
         if (accessToken && refreshToken) {
           // Exchange the access token for a session
           const { data, error } = await supabase.auth.setSession({
-            access_token: accessToken,
+            access_token: accessToken,  
             refresh_token: refreshToken,
           })
 
@@ -32,32 +33,42 @@ export default function AuthCallbackPage() {
           }
 
           if (data.user) {
-            // Batch waitlist operations if needed
-            const waitlistEmail = sessionStorage.getItem('waitlist_email')
-            if (waitlistEmail) {
-              // Add user to waitlist (run in background, don't block redirect)
-              fetch('/api/waitlist', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  userId: data.user.id,
-                  email: waitlistEmail,
-                }),
-              })
-              .then(response => {
-                if (response.ok) {
-                  sessionStorage.removeItem('waitlist_email')
-                }
-              })
-              .catch(err => {
-                console.error('Waitlist API error:', err)
-                // Don't block redirect if waitlist fails
-              })
+            // Check if email is confirmed before proceeding
+            if (!data.user.email_confirmed_at) {
+              setError('Please confirm your email address before continuing. Check your email for a confirmation link.');
+              setLoading(false);
+              return;
             }
 
-            // Redirect to pricing page immediately after successful auth
+            // Waitlist operations if needed
+            const waitlistEmail = sessionStorage.getItem('waitlist_email')
+            if (waitlistEmail) {
+              try {
+                const response = await fetch('/api/waitlist', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    userId: data.user.id,
+                    email: waitlistEmail,
+                  }),
+                })
+
+                if (response.ok) {
+                  sessionStorage.removeItem('waitlist_email')
+                  toast.success('Successfully added to waitlist!')
+                } else {
+                  console.error('Waitlist API error:', await response.text())
+                  toast.error('Could not add to waitlist, but your account is active.')
+                }
+              } catch (err) {
+                console.error('Waitlist API error:', err)
+                toast.error('Could not add to waitlist, but your account is active.')
+              }
+            }
+
+            // Redirect to pricing page after successful authentication and confirmation
             router.push('/pricing')
           }
         } else {
@@ -95,15 +106,15 @@ export default function AuthCallbackPage() {
       <div className="flex items-center justify-center min-h-screen bg-background p-4">
         <Card className="w-full max-w-md bg-card border-border">
           <CardHeader className="text-center">
-            <CardTitle className="text-foreground">Authentication Failed</CardTitle>
+            <CardTitle className="text-foreground">Authentication Required</CardTitle>
           </CardHeader>
           <CardContent className="text-center space-y-4">
             <p className="text-destructive">{error}</p>
             <Button 
               className="bg-primary hover:bg-primary/90"
-              onClick={() => router.push('/signin')}
+              onClick={() => router.push('/signup')}
             >
-              Try Again
+              Return to Sign Up
             </Button>
           </CardContent>
         </Card>

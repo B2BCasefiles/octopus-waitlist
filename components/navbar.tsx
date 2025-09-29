@@ -70,13 +70,13 @@ export function Navbar() {
                 <Button 
                   variant="outline" 
                   className="border-border text-foreground hover:bg-accent"
-                  onClick={() => window.location.href = '/signin'}
+                  onClick={() => window.location.href = '/signup'}
                 >
-                  Sign In
+                  Sign Up
                 </Button>
                 <Button 
                   className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6"
-                  onClick={() => window.location.href = '/signin'}
+                  onClick={() => window.location.href = '/signup'}
                 >
                   Join Waitlist
                 </Button>

@@ -33,7 +33,7 @@ export function Hero() {
             if (email) {
               sessionStorage.setItem('waitlistEmail', email)
             }
-            router.push('/signin')
+            router.push('/signup')
           }}
         >
           JOIN WAITLIST
