@@ -22,19 +22,9 @@ const platforms = [
     opus: true,
   },
   {
-    feature: "High Quality Export",
-    octopus: "1080p/4K+",
-    opus: "Up to 1080p",
-  },
-  {
     feature: "Fast Processing",
     octopus: "Edge-optimized, very fast",
     opus: "Fast, cloud-based",
-  },
-  {
-    feature: "Watermark Free Plan",
-    octopus: false,
-    opus: false,
   },
   {
     feature: "Effective Pricing",

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Check } from "lucide-react"
 import { WaitlistForm } from './waitlist-form'
 import { createRazorpayOrder, verifyPaymentSignature } from '@/lib/payment'
@@ -88,7 +88,7 @@ export function Pricing() {
           email: user.email,
         },
         theme: {
-          color: '#8b5cf6', // Using a purple color that matches your theme
+          color: '#8B5CF6', // Purple color for Razorpay
         },
       }
       
@@ -103,134 +103,131 @@ export function Pricing() {
   }
 
   return (
-    <section id="pricing" className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-background to-card"></div>
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground mb-4">
-            Simple, Transparent Pricing
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Choose the plan that works best for you. No hidden fees, no surprises.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Free Waitlist Card */}
-          <div className="bg-card border border-border rounded-2xl p-6 transition-all duration-300 hover:border-primary/50">
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-foreground mb-2">Free Waitlist</h3>
-              <div className="text-3xl font-bold text-primary">Free</div>
-              <p className="text-muted-foreground mt-2">Join the community</p>
-            </div>
-            
-            <ul className="space-y-3 mb-6">
-              <li className="flex items-center">
-                <Check className="w-5 h-5 text-primary mr-2" />
-                <span className="text-muted-foreground">Early access notifications</span>
-              </li>
-              <li className="flex items-center">
-                <Check className="w-5 h-5 text-primary mr-2" />
-                <span className="text-muted-foreground">Community updates</span>
-              </li>
-              <li className="flex items-center">
-                <Check className="w-5 h-5 text-primary mr-2" />
-                <span className="text-muted-foreground">Feature previews</span>
-              </li>
-            </ul>
-            
-            {!user ? (
-              <button
-                onClick={() => router.push('/signin')}
-                className="w-full py-3 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors border border-border"
-              >
-                Join Waitlist
-              </button>
-            ) : userProfile?.beta_access ? (
-              <div className="text-center py-3 text-sm text-green-500 font-medium">
-                ✓ Already have access
-              </div>
-            ) : userProfile?.waitlist_status === 'pending' ? (
-              <div className="text-center py-3 text-sm text-yellow-500 font-medium">
-                ✓ Already on waitlist
-              </div>
-            ) : (
-              <WaitlistForm plan="free" />
-            )}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-purple-900 to-purple-800 p-4">
+      <div className="w-full max-w-6xl mx-auto">
+        {/* Pricing Section */}
+        <section id="pricing" className="py-20">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="text-lg text-purple-200 max-w-2xl mx-auto">
+              Choose the plan that works best for you. No hidden fees, no surprises.
+            </p>
           </div>
 
-          {/* Founder Access Card */}
-          <div className="bg-card border border-border rounded-2xl p-6 transition-all duration-300 hover:border-primary/50 relative">
-            <div className="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-medium">
-              Limited Offer
-            </div>
-            
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-foreground mb-2">Founder Access</h3>
-              <div className="flex items-center justify-center gap-2">
-                <span className="text-3xl font-bold text-primary">$10</span>
-                <span className="text-muted-foreground line-through">$15</span>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Free Waitlist Card */}
+            <Card className="bg-gradient-to-br from-gray-900/70 to-purple-900/30 backdrop-blur-sm border border-purple-500/20 rounded-2xl p-8 transition-all duration-300 hover:border-purple-500/50 shadow-lg shadow-purple-900/20">
+              <div className="text-center mb-8">
+                <h3 className="text-3xl font-bold text-white mb-4">Free Waitlist</h3>
+                <div className="text-5xl font-bold text-purple-400 mb-2">Free</div>
+                <p className="text-purple-200">Join the community</p>
               </div>
-              <p className="text-muted-foreground mt-2">One-time payment</p>
-            </div>
-            
-            <ul className="space-y-3 mb-6">
-              <li className="flex items-center">
-                <Check className="w-5 h-5 text-primary mr-2" />
-                <span className="text-muted-foreground">Full platform access</span>
-              </li>
-              <li className="flex items-center">
-                <Check className="w-5 h-5 text-primary mr-2" />
-                <span className="text-muted-foreground">5,000 clip credits</span>
-              </li>
-              <li className="flex items-center">
-                <Check className="w-5 h-5 text-primary mr-2" />
-                <span className="text-muted-foreground">Priority support</span>
-              </li>
-              <li className="flex items-center">
-                <Check className="w-5 h-5 text-primary mr-2" />
-                <span className="text-muted-foreground">Exclusive features</span>
-              </li>
-            </ul>
-            
-            {user ? (
-              userProfile?.beta_access ? (
-                <button className="w-full py-3 bg-secondary text-muted-foreground rounded-lg font-medium cursor-not-allowed">
-                  Already Purchased
-                </button>
-              ) : (
-                <button
-                  className="w-full py-3 bg-primary/20 text-primary-foreground rounded-lg font-medium cursor-not-allowed"
-                  disabled
+              
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-center">
+                  <Check className="w-6 h-6 text-purple-400 mr-3" />
+                  <span className="text-gray-300">Early access notifications</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="w-6 h-6 text-purple-400 mr-3" />
+                  <span className="text-gray-300">Community updates</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="w-6 h-6 text-purple-400 mr-3" />
+                  <span className="text-gray-300">Feature previews</span>
+                </li>
+              </ul>
+              
+              {!user ? (
+                <Button
+                  onClick={() => router.push('/signin')}
+                  className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-lg py-6 rounded-xl font-bold uppercase transition-all duration-300"
                 >
-                  Coming Soon
-                </button>
-              )
-            ) : (
-              <button
-                className="w-full py-3 bg-primary/20 text-primary-foreground rounded-lg font-medium cursor-not-allowed"
-                disabled
-              >
-                Coming Soon
-              </button>
-            )}
-            
-            {!user && (
-              <p className="text-xs text-center text-muted-foreground mt-3">Sign in to purchase access</p>
-            )}
-            
-            {userProfile?.beta_access && (
-              <p className="text-xs text-center text-green-500 font-medium mt-3">✓ You have access!</p>
-            )}
+                  Join Waitlist
+                </Button>
+              ) : userProfile?.beta_access ? (
+                <div className="text-center py-4 text-green-500 font-bold">
+                  ✓ Already have access
+                </div>
+              ) : userProfile?.waitlist_status === 'pending' ? (
+                <div className="text-center py-4 text-yellow-500 font-bold">
+                  ✓ Already on waitlist
+                </div>
+              ) : (
+                <WaitlistForm plan="free" />
+              )}
+            </Card>
+
+            {/* Founder Access Card */}
+            <Card className="bg-gradient-to-br from-gray-900/70 to-purple-900/30 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-8 transition-all duration-300 hover:border-purple-500/50 shadow-lg shadow-purple-900/20 relative">
+              <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-purple-800 text-white px-4 py-1 rounded-full text-sm font-bold">
+                Limited Offer
+              </div>
+              
+              <div className="text-center mb-8">
+                <h3 className="text-3xl font-bold text-white mb-4">Founder Access</h3>
+                <div className="flex items-center justify-center gap-4 mb-2">
+                  <span className="text-5xl font-bold text-purple-400">$10</span>
+                  <span className="text-3xl text-gray-500 line-through">$15</span>
+                </div>
+                <p className="text-purple-200">One-time payment</p>
+              </div>
+              
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-center">
+                  <Check className="w-6 h-6 text-purple-400 mr-3" />
+                  <span className="text-gray-300">Full platform access</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="w-6 h-6 text-purple-400 mr-3" />
+                  <span className="text-gray-300">1,500 clip's credits</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="w-6 h-6 text-purple-400 mr-3" />
+                  <span className="text-gray-300">Priority support</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="w-6 h-6 text-purple-400 mr-3" />
+                  <span className="text-gray-300">Exclusive features</span>
+                </li>
+              </ul>
+              
+              {user ? (
+                userProfile?.beta_access ? (
+                  <Button className="w-full bg-gray-700 text-gray-400 text-lg py-6 rounded-xl font-bold cursor-not-allowed">
+                    Already Purchased
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleFounderPayment}
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white text-lg py-6 rounded-xl font-bold uppercase transition-all duration-300"
+                  >
+                    {loading ? 'Processing...' : 'Get Founder Access'}
+                  </Button>
+                )
+              ) : (
+                <Button
+                  onClick={() => router.push('/signin')}
+                  className="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white text-lg py-6 rounded-xl font-bold uppercase transition-all duration-300"
+                >
+                  Sign In to Purchase
+                </Button>
+              )}
+              
+              {!user && (
+                <p className="text-center text-purple-300 mt-4">Sign in to purchase access</p>
+              )}
+              
+              {userProfile?.beta_access && (
+                <p className="text-center text-green-500 font-bold mt-4">✓ You have access!</p>
+              )}
+            </Card>
           </div>
-        </div>
-        
-        <div className="text-center mt-12">
-          <p className="text-muted-foreground text-sm">
-            Have questions? <a href="/contact" className="text-primary hover:underline">Contact us</a>
-          </p>
-        </div>
+        </section>
       </div>
-    </section>
+    </div>
   )
 }

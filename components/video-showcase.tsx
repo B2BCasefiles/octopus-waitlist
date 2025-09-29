@@ -80,11 +80,12 @@ export function VideoShowcase() {
             <video
               ref={videoRef}
               className="w-full h-full object-cover"
-              preload="metadata"
+              preload="none"
               muted
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
               onEnded={() => setIsPlaying(false)}
+              loading="lazy"
             >
               <source src={videos[currentVideo].url} type="video/mp4" />
               Your browser does not support the video tag.
