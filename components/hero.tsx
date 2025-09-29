@@ -14,6 +14,14 @@ export function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-purple-900" />
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="mb-8">
+          <img 
+            src="https://vuobclcngoqsjkownwzb.supabase.co/storage/v1/object/public/Showcase%20Videos/LOGO.png" 
+            alt="OctopusClips Logo"
+            className="h-20 w-auto mx-auto"
+            loading="lazy"
+          />
+        </div>
         <h4 className="text-4xl   font-bold text-white mb-4 tracking-wider">Stop Paying $29/Month <br/> For Amateur-Looking Clips</h4>
 
         <p className="text-sm sm:text-base lg:text-lg text-gray-300 mb-12 tracking-widest uppercase font-medium">

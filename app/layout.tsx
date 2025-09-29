@@ -21,7 +21,10 @@ export const metadata: Metadata = {
   title: "OctopusClips - Professional Video Editing Without Professional Prices",
   description:
     "Custom typography, cinematic color grading, and frame-perfect animation for your video content. Premium results, indie budget.",
-    generator: 'v0.app'
+    generator: 'v0.app',
+  icons: {
+    icon: 'https://vuobclcngoqsjkownwzb.supabase.co/storage/v1/object/public/Showcase%20Videos/LOGO.png',
+  },
 }
 
 export default function RootLayout({
