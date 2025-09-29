@@ -28,7 +28,13 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <div className="text-xl font-bold text-foreground">OCTOPUS CLIPS</div>
+            <div className="text-xl font-bold text-foreground">
+              <img 
+                src="https://vuobclcngoqsjkownwzb.supabase.co/storage/v1/object/public/Showcase%20Videos/LOGO.png" 
+                alt="OCTOPUS CLIPS Logo"
+                className="h-8 w-auto"
+              />
+            </div>
           </div>
 
           <div className="hidden md:flex items-center space-x-8">

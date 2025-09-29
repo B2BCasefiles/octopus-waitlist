@@ -7,7 +7,13 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
           <div>
-            <div className="text-xl font-display font-bold text-foreground mb-4">🐙 OctopusClips</div>
+            <div className="text-xl font-display font-bold text-foreground mb-4">
+              <img 
+                src="https://vuobclcngoqsjkownwzb.supabase.co/storage/v1/object/public/Showcase%20Videos/LOGO.png" 
+                alt="OctopusClips Logo"
+                className="h-8 w-auto"
+              />
+            </div>
             <p className="text-sm text-muted-foreground">The AI clipper that respects your brand.</p>
           </div>
 
