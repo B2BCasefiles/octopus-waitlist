@@ -161,9 +161,9 @@ export function Pricing() {
             </Card>
 
             {/* Founder Access Card */}
-            <Card className="bg-gradient-to-br from-gray-900/70 to-purple-900/30 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-8 transition-all duration-300 hover:border-purple-500/50 shadow-lg shadow-purple-900/20 relative">
+            <Card className="bg-gradient-to-br from-gray-900/70 to-purple-900/30 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-8 transition-all duration-300 hover:border-purple-500/50 shadow-lg shadow-purple-900/20 relative opacity-70">
               <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-purple-800 text-white px-4 py-1 rounded-full text-sm font-bold">
-                Limited Offer
+                Coming Soon
               </div>
               
               <div className="text-center mb-8">
@@ -194,36 +194,11 @@ export function Pricing() {
                 </li>
               </ul>
               
-              {user ? (
-                userProfile?.beta_access ? (
-                  <Button className="w-full bg-gray-700 text-gray-400 text-lg py-6 rounded-xl font-bold cursor-not-allowed">
-                    Already Purchased
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={handleFounderPayment}
-                    disabled={loading}
-                    className="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white text-lg py-6 rounded-xl font-bold uppercase transition-all duration-300"
-                  >
-                    {loading ? 'Processing...' : 'Get Founder Access'}
-                  </Button>
-                )
-              ) : (
-                <Button
-                  onClick={() => router.push('/signin')}
-                  className="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white text-lg py-6 rounded-xl font-bold uppercase transition-all duration-300"
-                >
-                  Sign In to Purchase
-                </Button>
-              )}
+              <Button className="w-full bg-gray-700 text-gray-400 text-lg py-6 rounded-xl font-bold cursor-not-allowed" disabled>
+                Coming Soon
+              </Button>
               
-              {!user && (
-                <p className="text-center text-purple-300 mt-4">Sign in to purchase access</p>
-              )}
-              
-              {userProfile?.beta_access && (
-                <p className="text-center text-green-500 font-bold mt-4">✓ You have access!</p>
-              )}
+              <p className="text-center text-purple-300 mt-4">Available soon - Join waitlist for updates</p>
             </Card>
           </div>
         </section>
