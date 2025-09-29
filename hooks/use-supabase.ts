@@ -156,5 +156,40 @@ export const useSupabase = () => {
     }
   }
 
-  return { user, loading, signUp, signIn, signOut }
+  // Function to resend email confirmation
+  const resendConfirmationEmail = async (email: string) => {
+    try {
+      setLoading(true)
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`
+        }
+      })
+      
+      if (error) {
+        // Check if it's a rate limiting error
+        if (error.status === 429 || error.code === 'rate_limit_exceeded' || 
+            error.message.toLowerCase().includes('rate limit')) {
+          console.error('Rate limit error during email resend:', error)
+          throw new Error('Too many requests. Please wait before trying again.')
+        }
+        throw error
+      }
+      
+      return { success: true }
+    } catch (error: any) {
+      setLoading(false)
+      // Check if it's a rate limiting error from the network level
+      if (error.status === 429 || error.message.includes('429') || 
+          error.message.toLowerCase().includes('rate limit')) {
+        console.error('Rate limit error during email resend:', error)
+        throw new Error('Too many requests. Please wait before trying again.')
+      }
+      throw error
+    }
+  }
+
+  return { user, loading, signUp, signIn, signOut, resendConfirmationEmail }
 }

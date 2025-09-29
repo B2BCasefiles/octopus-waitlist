@@ -17,7 +17,8 @@ export default function SignUpPage() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const { signUp } = useSupabase() // Only using signUp, not signIn
+  const [isResending, setIsResending] = useState(false)
+  const { signUp, resendConfirmationEmail } = useSupabase() // Adding resendConfirmationEmail
   const router = useRouter()
   const searchParams = useSearchParams()
   
@@ -186,6 +187,83 @@ export default function SignUpPage() {
           </CardFooter>
         </form>
       </div>
+
+      {/* Email Confirmation Dialog */}
+      <Dialog open={showConfirmationDialog} onOpenChange={setShowConfirmationDialog}>
+        <DialogContent className="sm:max-w-md bg-card border-border">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+              <CheckCircle className="text-green-500" size={24} />
+              Confirm Your Email
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground pt-2">
+              <ul className="space-y-2 text-base">
+                <li className="flex items-start">
+                  <Mail className="text-primary mr-2 mt-0.5 flex-shrink-0" size={16} />
+                  <span>We've sent a confirmation link to <strong>{email}</strong></span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="text-primary mr-2 mt-0.5 flex-shrink-0" size={16} />
+                  <span>Please check your inbox and click the link to verify your account</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="text-primary mr-2 mt-0.5 flex-shrink-0" size={16} />
+                  <span>If you don't see it, check your spam or promotions folder</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="text-primary mr-2 mt-0.5 flex-shrink-0" size={16} />
+                  <span>After confirming, come back and sign in to access your account</span>
+                </li>
+              </ul>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-2 pt-4">
+            <Button 
+              onClick={() => router.push('/signin')}
+              className="w-full"
+            >
+              Go to Sign In
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={async () => {
+                setIsResending(true);
+                try {
+                  await resendConfirmationEmail(email);
+                  toast.success('Confirmation email resent! Please check your inbox.');
+                } catch (error: any) {
+                  console.error('Error resending confirmation email:', error);
+                  if (error.message && error.message.includes('rate limit')) {
+                    toast.error('Too many requests. Please wait before trying again.');
+                  } else {
+                    toast.error('Failed to resend confirmation email. Please try again.');
+                  }
+                } finally {
+                  setIsResending(false);
+                }
+              }}
+              disabled={isResending}
+              className="w-full border-border text-foreground hover:bg-accent"
+            >
+              {isResending ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                'Resend Email'
+              )}
+            </Button>
+            <Button 
+              variant="ghost" 
+              onClick={() => setShowConfirmationDialog(false)}
+              className="w-full text-muted-foreground hover:bg-accent"
+            >
+              Stay on this page
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
